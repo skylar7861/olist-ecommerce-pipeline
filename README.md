@@ -6,6 +6,15 @@ We provisioned an Azure ADLS Gen2 data lake using Terraform.
 The storage account has Hierarchical Namespace enabled, which allows Databricks to interact with the lake using directory semantics and optimized Spark I/O.
 Terraform ensures the infrastructure is reproducible, version-controlled, and cloud-native, satisfying the IaC requirement of the project.
 
+## Infrastructure (Terraform)
+
+Terraform provisions the following Azure resources:
+
+- Resource Group: rg-olist-dev
+- ADLS Gen2 Storage Account (Hierarchical Namespace enabled)
+- Private Blob Container: datalake
+
+The storage account is used as the Bronze/Silver/Gold data lake.
 
 # files loaded in the storage container
 Name                                             Blob Type    Blob Tier    Length    Content Type    Last Modified              Snapshot
