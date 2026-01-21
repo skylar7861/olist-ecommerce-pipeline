@@ -1,0 +1,453 @@
+{
+  "datasets": [
+    {
+      "name": "bffc80bc",
+      "displayName": "Orders & Revenue Over Time",
+      "queryLines": [
+        "SELECT\n",
+        "  order_date,\n",
+        "  orders_count,\n",
+        "  revenue,\n",
+        "  items_subtotal,\n",
+        "  items_sold,\n",
+        "  avg_order_value\n",
+        "FROM olist.gold.orders_daily\n",
+        "WHERE order_date IS NOT NULL\n",
+        "ORDER BY order_date;\n"
+      ],
+      "catalog": "olist",
+      "schema": "gold"
+    },
+    {
+      "name": "dff580e8",
+      "displayName": "Revenue by Category",
+      "queryLines": [
+        "SELECT\n",
+        "  category AS category_name,\n",
+        "  items_subtotal,\n",
+        "  orders_count,\n",
+        "  items_sold\n",
+        "FROM olist.gold.revenue_by_category\n",
+        "WHERE category IS NOT NULL\n",
+        "ORDER BY items_subtotal DESC\n",
+        "LIMIT 15;\n"
+      ]
+    },
+    {
+      "name": "68894bf2",
+      "displayName": "Revenue by State",
+      "queryLines": [
+        "SELECT\n",
+        "  customer_state,\n",
+        "  revenue,\n",
+        "  orders_count\n",
+        "FROM olist.gold.revenue_by_state\n",
+        "ORDER BY revenue DESC;\n"
+      ]
+    },
+    {
+      "name": "7fa7140b",
+      "displayName": "Delivery Performance (Monthly)",
+      "queryLines": [
+        "SELECT\n",
+        "  order_month,\n",
+        "  avg_delivery_days,\n",
+        "  pct_delivered_on_time\n",
+        "FROM olist.gold.delivery_monthly\n",
+        "ORDER BY order_month;\n"
+      ]
+    },
+    {
+      "name": "66f2edb8",
+      "displayName": "Payment Type Mix",
+      "queryLines": [
+        "SELECT\n",
+        "  payment_type,\n",
+        "  orders_count,\n",
+        "  revenue\n",
+        "FROM olist.gold.payment_type_mix\n",
+        "ORDER BY orders_count DESC;\n"
+      ]
+    },
+    {
+      "name": "6dca2b20",
+      "displayName": "Top Sellers",
+      "queryLines": [
+        "SELECT\n",
+        "  seller_id,\n",
+        "  seller_state,\n",
+        "  items_subtotal,\n",
+        "  orders_count\n",
+        "FROM olist.gold.top_sellers\n",
+        "ORDER BY items_subtotal DESC\n",
+        "LIMIT 10;\n"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "fe7ac425",
+      "displayName": "Operations",
+      "layout": [
+        {
+          "widget": {
+            "name": "orders-and-revenue-over-time",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "bffc80bc",
+                  "fields": [
+                    {
+                      "name": "monthly(order_date)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `order_date`)"
+                    },
+                    {
+                      "name": "sum(revenue)",
+                      "expression": "SUM(`revenue`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "monthly(order_date)",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(revenue)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "frame": {
+                "showDescription": false,
+                "title": "Orders and Revenue Over Time\n",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "revenue-by-category",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "dff580e8",
+                  "fields": [
+                    {
+                      "name": "category_name",
+                      "expression": "`category_name`"
+                    },
+                    {
+                      "name": "sum(items_subtotal)",
+                      "expression": "SUM(`items_subtotal`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "category_name",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(items_subtotal)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "frame": {
+                "title": "Top Product Categories by Sales",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 0,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "revenue-by-customer-state",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "68894bf2",
+                  "fields": [
+                    {
+                      "name": "customer_state",
+                      "expression": "`customer_state`"
+                    },
+                    {
+                      "name": "sum(revenue)",
+                      "expression": "SUM(`revenue`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "customer_state",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(revenue)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "frame": {
+                "title": "Revenue by Customer State",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "delivery-performance-over-time",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "7fa7140b",
+                  "fields": [
+                    {
+                      "name": "monthly(order_month)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `order_month`)"
+                    },
+                    {
+                      "name": "sum(avg_delivery_days)",
+                      "expression": "SUM(`avg_delivery_days`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "monthly(order_month)",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(avg_delivery_days)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Delivery Performance Over Time\n"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 6,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "payment-method-distribution",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "66f2edb8",
+                  "fields": [
+                    {
+                      "name": "payment_type",
+                      "expression": "`payment_type`"
+                    },
+                    {
+                      "name": "sum(orders_count)",
+                      "expression": "SUM(`orders_count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "payment_type",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(orders_count)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "frame": {
+                "title": "Payment Method Distribution",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 12,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "top-sellers-by-sales",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "6dca2b20",
+                  "fields": [
+                    {
+                      "name": "seller_id",
+                      "expression": "`seller_id`"
+                    },
+                    {
+                      "name": "items_subtotal",
+                      "expression": "`items_subtotal`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "seller_id",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "items_subtotal",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "frame": {
+                "title": "Top Sellers by Sales",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 12,
+            "width": 3,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    },
+    {
+      "name": "fb14882c",
+      "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "8c6d7432",
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-single-select",
+              "encodings": {},
+              "frame": {
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
