@@ -71,3 +71,6 @@ olist-ecommerce-pipeline/
   README.md
   .gitignore
 
+  <img width="1845" height="941" alt="image" src="https://github.com/user-attachments/assets/0415e708-dfc7-4612-a48a-c848c0c82da4" />
+
+
