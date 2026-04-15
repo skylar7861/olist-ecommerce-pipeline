@@ -30,5 +30,44 @@ raw/olist/olist_products_dataset.csv             BlockBlob    Hot          23794
 raw/olist/olist_sellers_dataset.csv              BlockBlob    Hot          174703    text/csv        2026-01-17T20:48:33+00:00
 raw/olist/product_category_name_translation.csv  BlockBlob    Hot          2613      text/csv        2026-01-17T20:48:33+00:00
 2 % 
+#Architecture
+Azure Blob/ADLS Gen2 (container: datalake)
+  raw/olist/*.csv
+        |
+        |  (Azure SDK over HTTPS)
+        v
+Databricks Unity Catalog Volume
+  /Volumes/olist/stage/olist_stage/olist_raw/*.csv
+        |
+        v
+Bronze (UC managed Delta, raw columns as STRING)
+  olist.bronze.*_raw
+        |
+        v
+Silver (typed/cleaned/deduped)
+  olist.silver.*
+        |
+        v
+Gold (aggregated marts)
+  olist.gold.*
+        |
+        v
+Databricks SQL Dashboard (multiple tiles)
+#Repo setup (VS Code + GitHub)
+Repo structure
+olist-ecommerce-pipeline/
+  notebooks/
+    00_ingest_azure_to_volume.py
+    01_bronze_ingest.py
+    02_silver_transforms.py
+    03_gold_marts.py
+  sql/
+    dashboard_queries.sql
+  terraform/
+    providers.tf
+    variables.tf
+    main.tf
+    outputs.tf
+  README.md
+  .gitignore
 
-testing databricks
